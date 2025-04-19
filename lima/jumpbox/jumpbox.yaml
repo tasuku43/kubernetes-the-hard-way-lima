@@ -15,3 +15,6 @@ memory: "512MB"
 mounts:
   - location: "~"
     writable: true
+
+networks:
+  - lima: shared
