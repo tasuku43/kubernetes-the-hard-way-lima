@@ -13,11 +13,5 @@ cpus: 1
 memory: "512MB"
 
 mounts:
-- location: "~"
-
-provision:
-- mode: system
-  script: |
-    #!/bin/bash
-    set -eux -o pipefail
-    apt-get update
+  - location: "~"
+    writable: true
