@@ -60,3 +60,86 @@ tasks:
     vars:
       NAME:
         sh: echo "${NAME:-missing}"
+  
+  create-machines-hosts:
+    desc: Create a machines.txt file
+    cmds:
+      - rm -f hosts.txt
+      - echo "# Kubernetes The Hard Way" >> hosts.txt
+      - NAME=server task get-machine-info >> hosts.txt
+      - NAME=node-0 task get-machine-info >> hosts.txt
+      - NAME=node-1 task get-machine-info >> hosts.txt
+
+  get-machine-info:
+    desc: Get the IP address, hostname, and FQDN of a machine
+    cmds:
+      - |
+        IP=$(NAME=$NAME task get-machine-ip)
+        HOSTNAME=$(NAME=$NAME task get-machine-hostname)
+        FQDN=$(NAME=$NAME task get-machine-hostname-fqdn)
+        echo "$IP $FQDN $HOSTNAME"
+    vars:
+      NAME:
+        sh: echo "${NAME:-missing}"
+
+  get-machine-ip:
+    desc: Get the IP address of a machine
+    cmds:
+      - limactl shell {{.NAME}} -- bash -c "ip -4 addr show lima0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'"
+    vars:
+      NAME:
+        sh: echo "${NAME:-missing}"
+
+  get-machine-hostname:
+    desc: Get the hostname of a machine
+    cmds:
+      - limactl shell {{.NAME}} -- bash -c "hostname"
+    vars:
+      NAME:
+        sh: echo "${NAME:-missing}"
+  
+  get-machine-hostname-fqdn:
+    desc: Get the hostname of a machine
+    cmds:
+      - limactl shell {{.NAME}} -- bash -c "hostname --fqdn"
+    vars:
+      NAME:
+        sh: echo "${NAME:-missing}"
+
+  add-etc-hosts-to-machines:
+    desc: Add hostnames to the machines' /etc/hosts file
+    cmds:
+      - NAME=jumpbox task add-etc-hosts-to-machine
+      - NAME=server task add-etc-hosts-to-machine
+      - NAME=node-0 task add-etc-hosts-to-machine
+      - NAME=node-1 task add-etc-hosts-to-machine
+  add-etc-hosts-to-machine:
+    desc: Add hostnames to the machine's /etc/hosts file
+    cmds:
+      - limactl cp hosts.txt {{.NAME}}:/tmp/hosts.txt
+      - limactl shell {{.NAME}} -- bash -c "sudo sh -c 'cat /tmp/hosts.txt | grep -v {{.NAME}} >> /etc/hosts'"
+      - limactl shell {{.NAME}} -- bash -c "rm /tmp/hosts.txt"
+    vars:
+      NAME:
+        sh: echo "${NAME:-missing}"
+
+  verify-connectivities:
+    desc: Verify connectivity between all machines
+    cmds:
+      - |
+        echo "Verifying connectivity between jumpbox and all other machines..."
+        limactl shell jumpbox -- bash -c "ping -c 3 \$(getent hosts server | awk '{print \$3}')"
+        limactl shell jumpbox -- bash -c "ping -c 3 \$(getent hosts node-0 | awk '{print \$3}')"
+        limactl shell jumpbox -- bash -c "ping -c 3 \$(getent hosts node-1 | awk '{print \$3}')"
+      - |
+        echo "Verifying connectivity between server and all other machines..."
+        limactl shell server -- bash -c "ping -c 3 \$(getent hosts node-0 | awk '{print \$3}')"
+        limactl shell server -- bash -c "ping -c 3 \$(getent hosts node-1 | awk '{print \$3}')"
+      - |
+        echo "Verifying connectivity between node-0 and all other machines..."
+        limactl shell node-0 -- bash -c "ping -c 3 \$(getent hosts server | awk '{print \$3}')"
+        limactl shell node-0 -- bash -c "ping -c 3 \$(getent hosts node-1 | awk '{print \$3}')"
+      - |
+        echo "Verifying connectivity between node-1 and all other machines..."
+        limactl shell node-1 -- bash -c "ping -c 3 \$(getent hosts server | awk '{print \$3}')"
+        limactl shell node-1 -- bash -c "ping -c 3 \$(getent hosts node-0 | awk '{print \$3}')"
