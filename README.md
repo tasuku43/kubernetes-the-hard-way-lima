@@ -6,6 +6,7 @@ This project provides a setup to run [Kubernetes the Hard Way](https://github.co
 ## Prerequisites
 - [Homebrew](https://brew.sh/)
 - [go-task](https://taskfile.dev/)
+- [Lima](https://github.com/lima-vm/lima)
 
 ## Setup Instructions
 
