@@ -10,22 +10,34 @@ This project provides a setup to run [Kubernetes the Hard Way](https://github.co
 
 ## Setup Instructions
 
-### 1. Install go-task
-Run the following command to install `go-task`:
+### 1. Install Prerequisites
+Install the required tools:
 
 ```bash
-brew install go-task
+brew install go-task lima
 ```
 
 ### 2. Clone the Repository
-Run the `clone-repo` task defined in `Taskfile.yml` to clone the repository:
+Run the following command to clone the reference repository:
 
 ```bash
 task clone-repo
 ```
 
-This will clone the `kubernetes-the-hard-way` repository into the project directory. The purpose of cloning this repository is to allow tools like GitHub Copilot or other AI systems to reference its content for assistance during development. Note that the cloned repository is included in `.gitignore`, so it will not be tracked by this project's version control system.
+### 3. Start the Instances
+Run the following command to create and start all Lima instances:
+
+```bash
+task create-all
+```
+
+This will create and start the following Lima instances:
+- `jumpbox`: The machine used to access the Kubernetes cluster
+- `server`: The Kubernetes control plane node
+- `node-0`: The first Kubernetes worker node
+- `node-1`: The second Kubernetes worker node
 
 ## Notes
-- Ensure that `go-task` is installed correctly.
-- If there is existing data in the target directory, it may be overwritten.
+- Ensure all prerequisites are installed correctly
+- You can validate the instances with `task validate-all`
+- If you need to recreate the instances, use `task recreate-all`
