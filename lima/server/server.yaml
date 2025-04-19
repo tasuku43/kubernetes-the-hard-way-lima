@@ -18,3 +18,17 @@ mounts:
 
 networks:
   - lima: shared
+
+provision:
+- mode: system
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+
+    IP=$(ip -4 addr show lima0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+    FQDN="server.kubernetes.local"
+    HOST="server"
+
+    echo -e "${IP}\t${FQDN} ${HOST}" >> /etc/hosts
+    hostnamectl set-hostname ${HOST}
+    systemctl restart systemd-hostnamed
