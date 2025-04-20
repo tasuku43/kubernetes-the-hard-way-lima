@@ -1,2 +1,5 @@
-/kubernetes-the-hard-way
+/kubernetes-the-hard-way/
+/lima/jumpbox/kubernetes-the-hard-way/
+/socket_vmnet/
+.env
 hosts.txt

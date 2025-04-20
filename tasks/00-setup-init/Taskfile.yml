@@ -1,0 +1,9 @@
+version: '3'
+
+tasks:
+  create-dotenv:
+    desc: Create a .env file with the current directory
+    cmds:
+      - |
+        #!/bin/bash
+        echo "ROOT_DIR=$(pwd)" > .env

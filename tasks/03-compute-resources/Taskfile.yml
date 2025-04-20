@@ -1,0 +1,87 @@
+version: '3'
+
+tasks:
+  provision-compute-resources:
+    desc: Provision compute resources
+    cmds:
+      - task: _setup-hostname
+        vars:
+          NAME: '{{.ITEM}}'
+        for: [server, node-0, node-1]
+      - task: _create-host-lookup-table
+      - task: _add-etc-hosts-to-machines
+
+  _setup-hostname:
+    internal: true
+    desc: Setup the hosts file
+    cmds:
+      - |
+        #!/bin/bash
+
+        limactl shell {{.NAME}} sudo -i bash <<'EOF'
+        set -eux -o pipefail
+
+        IP=$(ip -4 addr show lima0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+        FQDN="{{.NAME}}.kubernetes.local"
+        HOST="{{.NAME}}"
+
+        echo -e "${IP}\t${FQDN} ${HOST}" | tee -a /etc/hosts
+        hostnamectl set-hostname ${HOST}
+        systemctl restart systemd-hostnamed
+        EOF
+
+  _create-host-lookup-table:
+    internal: true
+    desc: Create a machines.txt file
+    cmds:
+      - rm -f hosts.txt
+      - echo "# Kubernetes The Hard Way" >> hosts.txt
+      - task: _add-hosts
+        vars:
+          NAME: '{{.ITEM}}'
+        for: [server, node-0, node-1]
+  _add-hosts:
+    internal: true
+    desc: Get the IP address, hostname, and FQDN of a machine
+    cmds:
+      - |
+        IP=$(limactl shell {{.NAME}} -- bash -c "ip -4 addr show lima0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'")
+        HOSTNAME=$(limactl shell {{.NAME}} -- bash -c "hostname")
+        FQDN=$(limactl shell {{.NAME}} -- bash -c "hostname --fqdn")
+        echo -e "$IP\t$FQDN $HOSTNAME" >> hosts.txt
+
+  _add-etc-hosts-to-machines:
+    internal: true
+    desc: Add hostnames to the machines' /etc/hosts file
+    cmds:
+      - task: _add-etc-hosts-to-machine
+        vars:
+          NAME: '{{.ITEM}}'
+        for: [jumpbox, server, node-0, node-1]
+  _add-etc-hosts-to-machine:
+    desc: Add hostnames to the machine's /etc/hosts file
+    cmds:
+      - limactl cp hosts.txt {{.NAME}}:/tmp/hosts.txt
+      - limactl shell {{.NAME}} -- bash -c "sudo sh -c 'cat /tmp/hosts.txt | grep -v {{.NAME}} >> /etc/hosts'"
+      - limactl shell {{.NAME}} -- bash -c "rm /tmp/hosts.txt"
+
+  verify-connectivities:
+    desc: Verify connectivity between all machines
+    cmds:
+      - |
+        echo "Verifying connectivity between jumpbox and all other machines..."
+        limactl shell jumpbox -- bash -c "ping -c 3 \$(getent hosts server | awk '{print \$3}')"
+        limactl shell jumpbox -- bash -c "ping -c 3 \$(getent hosts node-0 | awk '{print \$3}')"
+        limactl shell jumpbox -- bash -c "ping -c 3 \$(getent hosts node-1 | awk '{print \$3}')"
+      - |
+        echo "Verifying connectivity between server and all other machines..."
+        limactl shell server -- bash -c "ping -c 3 \$(getent hosts node-0 | awk '{print \$3}')"
+        limactl shell server -- bash -c "ping -c 3 \$(getent hosts node-1 | awk '{print \$3}')"
+      - |
+        echo "Verifying connectivity between node-0 and all other machines..."
+        limactl shell node-0 -- bash -c "ping -c 3 \$(getent hosts server | awk '{print \$3}')"
+        limactl shell node-0 -- bash -c "ping -c 3 \$(getent hosts node-1 | awk '{print \$3}')"
+      - |
+        echo "Verifying connectivity between node-1 and all other machines..."
+        limactl shell node-1 -- bash -c "ping -c 3 \$(getent hosts server | awk '{print \$3}')"
+        limactl shell node-1 -- bash -c "ping -c 3 \$(getent hosts node-0 | awk '{print \$3}')"
