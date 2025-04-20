@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -euo pipefail
+
+cd kubernetes-the-hard-way
+
+openssl genrsa -out ca.key 4096
+openssl req -x509 -new -sha512 -noenc \
+  -key ca.key -days 3653 \
+  -config ca.conf \
+  -out ca.crt
+
+certs=(
+  "admin" "node-0" "node-1"
+  "kube-proxy" "kube-scheduler"
+  "kube-controller-manager"
+  "kube-api-server"
+  "service-accounts"
+)
+
+for cert in ${certs[*]}; do
+  openssl genrsa -out "${cert}.key" 4096
+
+  openssl req -new -key "${cert}.key" -sha256 \
+    -config "ca.conf" -section ${cert} \
+    -out "${cert}.csr"
+
+  openssl x509 -req -days 3653 -in "${cert}.csr" \
+    -copy_extensions copyall \
+    -sha256 -CA "ca.crt" \
+    -CAkey "ca.key" \
+    -CAcreateserial \
+    -out "${cert}.crt"
+done
+
+ls -1 *.crt *.key *.csr

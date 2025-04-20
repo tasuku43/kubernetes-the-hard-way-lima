@@ -1,0 +1,26 @@
+version: '3'
+
+tasks:
+  create-certificates:
+    desc: Create the certificate authority and certificates for the cluster
+    vars:
+      ROOT_DIR: '{{.ROOT_DIR}}'
+    cmds:
+      - |
+        #!/bin/bash
+
+        limactl shell jumpbox sudo -i bash <<'EOF'
+        cd {{.ROOT_DIR}}/lima/jumpbox
+        ./create-certificates.sh
+        EOF
+
+  destribute-certificates:
+    desc: Distribute the certificates to the machines
+    vars:
+      ROOT_DIR: '{{.ROOT_DIR}}'
+    cmds:
+      - |
+        #!/bin/bash
+
+        cd {{.ROOT_DIR}}/lima/jumpbox
+        ./distribute-certificates.sh

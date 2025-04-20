@@ -18,3 +18,5 @@ tasks:
       - task: 02:setup-jumpbox
       - task: 03:provision-compute-resources
       - task: 03:verify-connectivities
+      - task: 04:create-certificates
+      - task: 04:distribute-certificates
