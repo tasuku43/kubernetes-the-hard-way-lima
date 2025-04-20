@@ -30,6 +30,19 @@ tasks:
     cmds:
       - limactl validate lima/{{.NAME}}/{{.NAME}}.yaml
   
+  delete-all:
+    desc: Delete all machines using Lima
+    cmds:
+      - task: delete
+        vars:
+          NAME: '{{.ITEM}}'
+        for: [jumpbox, server, node-0, node-1]
+  delete:
+    desc: Delete a Lima instance
+    cmds:
+      - limactl stop {{.NAME}} || true
+      - limactl delete {{.NAME}} || true
+
   recreate-all:
     desc: Recreate all machines using Lima
     cmds:
@@ -40,9 +53,8 @@ tasks:
   recreate:
     desc: Recreate a Lima instance with updated template
     cmds:
-      - limactl stop {{.NAME}} || true
-      - limactl delete {{.NAME}} || true
-      - limactl start --name={{.NAME}} lima/{{.NAME}}/{{.NAME}}.yaml
+      - task: delete-all
+      - task: create-all
   
   connect:
     desc: Connect to a VM as root user
