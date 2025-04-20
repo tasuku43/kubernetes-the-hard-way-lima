@@ -7,3 +7,14 @@ includes:
   01: ./tasks/01-prerequisites
   02: ./tasks/02-jumpbox
   03: ./tasks/03-compute-resources
+  04: ./tasks/04-certificate-authority
+
+tasks:
+  setup-kubernetes-cluster:
+    desc: Setup the kubernetes cluster
+    cmds:
+      - task: 00:create-dotenv
+      - task: 01:create-all
+      - task: 02:setup-jumpbox
+      - task: 03:provision-compute-resources
+      - task: 03:verify-connectivities
