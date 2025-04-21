@@ -59,6 +59,7 @@ tasks:
           NAME: '{{.ITEM}}'
         for: [jumpbox, server, node-0, node-1]
   _add-etc-hosts-to-machine:
+    internal: true
     desc: Add hostnames to the machine's /etc/hosts file
     cmds:
       - limactl cp hosts.txt {{.NAME}}:/tmp/hosts.txt
