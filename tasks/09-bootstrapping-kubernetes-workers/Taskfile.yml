@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  utils:cmd:
+    desc: Placeholder for 09-bootstrapping-kubernetes-workers tasks
+    cmds:
+      - echo "Taskfile for 09-bootstrapping-kubernetes-workers"

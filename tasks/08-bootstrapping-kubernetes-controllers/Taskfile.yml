@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  utils:cmd:
+    desc: Placeholder for 08-bootstrapping-kubernetes-controllers tasks
+    cmds:
+      - echo "Taskfile for 08-bootstrapping-kubernetes-controllers"

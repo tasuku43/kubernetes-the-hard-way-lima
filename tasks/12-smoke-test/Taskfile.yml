@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  utils:cmd:
+    desc: Placeholder for 12-smoke-test tasks
+    cmds:
+      - echo "Taskfile for 12-smoke-test"
