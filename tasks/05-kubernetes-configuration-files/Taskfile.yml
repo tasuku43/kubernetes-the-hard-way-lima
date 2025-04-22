@@ -1,28 +1,23 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
   configure-cluster-access-for-jumpbox:
     desc: Configure the jumpbox machine to access the cluster
-    vars:
-      ROOT_DIR: '{{.ROOT_DIR}}'
     cmds:
-      - |
-        #!/bin/bash
-
-        limactl shell jumpbox sudo -i bash <<'EOF'
-        cd {{.ROOT_DIR}}/lima/jumpbox
-        ./configure-cluster-access.sh
-        EOF
+      - task: utils:cmd
+        vars:
+          ROOT_DIR: '{{.ROOT_DIR}}'
+          NAME: jumpbox
+          CMD: configure-cluster-access
   
   distribute-config-files-from-jumpbox:
     desc: Distribute the Kubernetes configuration files from the jumpbox machine to the cluster nodes
-    vars:
-      ROOT_DIR: '{{.ROOT_DIR}}'
     cmds:
-      - |
-        #!/bin/bash
-
-        limactl shell jumpbox sudo -i bash <<'EOF'
-        cd {{.ROOT_DIR}}/lima/jumpbox
-        ./distribute-config-files.sh
-        EOF
+      - task: utils:cmd
+        vars:
+          ROOT_DIR: '{{.ROOT_DIR}}'
+          NAME: jumpbox
+          CMD: distribute-config-files

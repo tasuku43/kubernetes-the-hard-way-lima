@@ -1,15 +1,14 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
   setup-jumpbox:
     desc: Setup the jumpbox machine
-    vars:
-      ROOT_DIR: '{{.ROOT_DIR}}'
     cmds:
-      - |
-        #!/bin/bash
-
-        limactl shell jumpbox sudo -i bash <<'EOF'
-        cd {{.ROOT_DIR}}/lima/jumpbox
-        ./setup-jumpbox.sh
-        EOF
+      - task: utils:cmd
+        vars:
+          ROOT_DIR: '{{.ROOT_DIR}}'
+          NAME: jumpbox
+          CMD: setup-jumpbox
