@@ -1,5 +1,19 @@
-/kubernetes-the-hard-way/
 /lima/jumpbox/kubernetes-the-hard-way/
 /socket_vmnet/
 .env
 hosts.txt
+
+# docs
+tasks/01-prerequisites/01-prerequisites.md
+tasks/02-jumpbox/02-jumpbox.md
+tasks/03-compute-resources/03-compute-resources.md
+tasks/04-certificate-authority/04-certificate-authority.md
+tasks/05-kubernetes-configuration-files/05-kubernetes-configuration-files.md
+tasks/06-data-encryption-keys/06-data-encryption-keys.md
+tasks/07-bootstrapping-etcd/07-bootstrapping-etcd.md
+tasks/08-bootstrapping-kubernetes-controllers/08-bootstrapping-kubernetes-controllers.md
+tasks/09-bootstrapping-kubernetes-workers/09-bootstrapping-kubernetes-workers.md
+tasks/10-configuring-kubectl/10-configuring-kubectl.md
+tasks/11-pod-network-routes/11-pod-network-routes.md
+tasks/12-smoke-test/12-smoke-test.md
+tasks/13-cleanup/13-cleanup.md

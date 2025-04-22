@@ -11,3 +11,22 @@ tasks:
 
         echo "ROOT_DIR=$(pwd)" > .env
         echo "ROOT_PASS=$(openssl rand -base64 12)" >> .env
+
+  download-docs:
+    desc: Download documentation for Kubernetes the Hard Way
+    cmds:
+      - cmd: curl -o ./tasks/{{.ITEM}}/{{.ITEM}}.md https://raw.githubusercontent.com/kelseyhightower/kubernetes-the-hard-way/master/docs/{{.ITEM}}.md
+        for:
+          - 01-prerequisites
+          - 02-jumpbox
+          - 03-compute-resources
+          - 04-certificate-authority
+          - 05-kubernetes-configuration-files
+          - 06-data-encryption-keys
+          - 07-bootstrapping-etcd
+          - 08-bootstrapping-kubernetes-controllers
+          - 09-bootstrapping-kubernetes-workers
+          - 10-configuring-kubectl
+          - 11-pod-network-routes
+          - 12-smoke-test
+          - 13-cleanup
