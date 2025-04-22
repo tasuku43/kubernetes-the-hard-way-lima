@@ -8,15 +8,24 @@ includes:
   02: ./tasks/02-jumpbox
   03: ./tasks/03-compute-resources
   04: ./tasks/04-certificate-authority
+  05: ./tasks/05-kubernetes-configuration-files
 
 tasks:
-  setup-kubernetes-cluster:
+  up-cluster:
     desc: Setup the kubernetes cluster
     cmds:
-      - task: 00:create-dotenv
-      - task: 01:create-all
-      - task: 02:setup-jumpbox
-      - task: 03:provision-compute-resources
-      - task: 03:verify-connectivities
-      - task: 04:create-certificates
-      - task: 04:distribute-certificates
+      # - task: 00:create-dotenv
+      # - task: 01:create-all
+      # - task: 02:setup-jumpbox
+      # - task: 03:configure-hostnames
+      # - task: 03:verify-connectivities
+      # - task: 03:configure-ssh-access-from-jumpbox
+      # - task: 04:create-certificates
+      # - task: 04:distribute-certificates
+      # - task: 05:configure-cluster-access-for-jumpbox
+      - task: 05:distribute-config-files-from-jumpbox
+
+  clean-cluster:
+    desc: Clean up the kubernetes cluster
+    cmds:
+      - task: 01:delete-all

@@ -1,8 +1,13 @@
 version: '3'
 
+# Note:
+# In the official "Kubernetes the Hard Way" guide, SSH configuration comes after provisioning compute resources.
+# However, in this Lima-based environment, IP addresses are assigned only after hostnames are set up.
+# Therefore, this Taskfile configures hostnames first, and ensures SSH connectivity using those hostnames,
+# before provisioning compute resources. This ensures smoother automation in a Lima VM setup.
 tasks:
-  provision-compute-resources:
-    desc: Provision compute resources
+  configure-hostnames:
+    desc: Configure hostnames and /etc/hosts file
     cmds:
       - task: _setup-hostname
         vars:
@@ -65,6 +70,64 @@ tasks:
       - limactl cp hosts.txt {{.NAME}}:/tmp/hosts.txt
       - limactl shell {{.NAME}} -- bash -c "sudo sh -c 'cat /tmp/hosts.txt | grep -v {{.NAME}} >> /etc/hosts'"
       - limactl shell {{.NAME}} -- bash -c "rm /tmp/hosts.txt"
+  
+  configure-ssh-access-from-jumpbox:
+    desc: Configure SSH access from the jumpbox to other machines
+    cmds:
+      - task: _enable-root-ssh-access
+        vars:
+          NAME: '{{.ITEM}}'
+          ROOT_PASS: '{{.ROOT_PASS}}'
+        for: [jumpbox, server, node-0, node-1]
+      - task: _generate-ssh-keys-on-jumpbox
+      - task: _distribute-ssh-keys
+        vars:
+          NAME: '{{.ITEM}}'
+          ROOT_PASS: '{{.ROOT_PASS}}'
+        for: [server, node-0, node-1]
+
+  _enable-root-ssh-access:
+    internal: true
+    desc: Enable root SSH access
+    cmds:
+      - |
+        #!/bin/bash
+
+        limactl shell {{.NAME}} sudo -i bash <<'EOF'
+        set -eux -o pipefail
+
+        sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+        echo 'root:{{.ROOT_PASS}}' | chpasswd
+
+        systemctl restart sshd
+        EOF
+  _generate-ssh-keys-on-jumpbox:
+    internal: true
+    desc: Generate SSH keys
+    cmds:
+      - |
+        #!/bin/bash
+
+        limactl shell jumpbox sudo -i bash <<'EOF'
+        set -eux -o pipefail
+
+        rm -f ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
+        ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
+        EOF
+  _distribute-ssh-keys:
+    internal: true
+    desc: Distribute SSH keys to all machines
+    cmds:
+      - cmd: |
+          #!/bin/bash
+
+          limactl shell jumpbox sudo -i bash <<'EOF'
+          set -eux -o pipefail
+
+          sshpass -p '{{.ROOT_PASS}}' ssh-copy-id -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pub root@{{.NAME}}
+          EOF
 
   verify-connectivities:
     desc: Verify connectivity between all machines

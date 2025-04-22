@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-apt-get update && apt-get -y install wget curl vim openssl git tree
+apt-get update && apt-get -y install wget curl vim openssl git tree sshpass
 
 # すでに kubernetes-the-hard-way がある場合は、clone しない
 if [ ! -d "kubernetes-the-hard-way" ]; then

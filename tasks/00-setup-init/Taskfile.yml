@@ -6,4 +6,8 @@ tasks:
     cmds:
       - |
         #!/bin/bash
+
+        rm -f .env
+
         echo "ROOT_DIR=$(pwd)" > .env
+        echo "ROOT_PASS=$(openssl rand -base64 12)" >> .env
