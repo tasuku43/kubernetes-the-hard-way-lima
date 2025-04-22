@@ -1,7 +1,14 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
-  utils:cmd:
-    desc: Placeholder for 06-data-encryption-keys tasks
+  generate-data-encryption-config-and-key:
+    desc: Generate the data encryption config and key
     cmds:
-      - echo "Taskfile for 06-data-encryption-keys"
+      - task: utils:cmd
+        vars:
+          ROOT_DIR: '{{.ROOT_DIR}}'
+          NAME: jumpbox
+          CMD: generate-data-encryption-config-and-key

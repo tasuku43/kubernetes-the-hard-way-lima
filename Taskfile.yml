@@ -9,6 +9,7 @@ includes:
   03: ./tasks/03-compute-resources
   04: ./tasks/04-certificate-authority
   05: ./tasks/05-kubernetes-configuration-files
+  06: ./tasks/06-data-encryption-keys
 
 tasks:
   up-cluster:
@@ -25,6 +26,7 @@ tasks:
       - task: 04:distribute-certificates
       - task: 05:configure-cluster-access-for-jumpbox
       - task: 05:distribute-config-files-from-jumpbox
+      - task: 06:generate-data-encryption-config-and-key
 
   clean-cluster:
     desc: Clean up the kubernetes cluster
