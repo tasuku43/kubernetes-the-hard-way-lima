@@ -11,6 +11,7 @@ includes:
   05: ./tasks/05-kubernetes-configuration-files
   06: ./tasks/06-data-encryption-keys
   07: ./tasks/07-bootstrapping-etcd
+  08: ./tasks/08-bootstrapping-kubernetes-controllers
 
 tasks:
   99:up-cluster:
@@ -31,6 +32,9 @@ tasks:
       - task: 07:copy-etcd-files-to-server
       - task: 07:bootstrap-etcd-cluster
       - task: 07:verify-etcd
+      - task: 08:copy-k8s-binaries-to-server
+      - task: 08:provision-control-plane
+      - task: 08:verify-control-plane
 
   99:clean-cluster:
     desc: Clean up the kubernetes cluster

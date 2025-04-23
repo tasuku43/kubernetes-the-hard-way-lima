@@ -1,7 +1,37 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
-  utils:cmd:
-    desc: Placeholder for 08-bootstrapping-kubernetes-controllers tasks
+  copy-k8s-binaries-to-server:
+    desc: "Copy `etcd` binaries and systemd unit files to the `server` machine"
     cmds:
-      - echo "Taskfile for 08-bootstrapping-kubernetes-controllers"
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: copy-k8s-binaries-to-server
+  
+  provision-control-plane:
+    desc: "In this lab you will bootstrap the Kubernetes control plane. The following components will be installed on the `server` machine: Kubernetes API Server, Scheduler, and Controller Manager."
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: server
+          CMD: provision-control-plane
+  
+  verify-control-plane:
+    desc: "At this point the Kubernetes control plane is up and running. Run the following commands from the `jumpbox` machine to verify it's working"
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: |
+            set -euo pipefail
+            
+            cd kubernetes-the-hard-way
+            curl --cacert ca.crt \
+              https://server.kubernetes.local:6443/version
+
+
+  
