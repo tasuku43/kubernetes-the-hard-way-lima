@@ -9,6 +9,5 @@ tasks:
     cmds:
       - task: utils:cmd
         vars:
-          ROOT_DIR: '{{.ROOT_DIR}}'
           NAME: jumpbox
           CMD: setup-jumpbox

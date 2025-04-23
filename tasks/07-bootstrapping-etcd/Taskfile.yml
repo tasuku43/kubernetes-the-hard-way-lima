@@ -1,7 +1,29 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
-  utils:cmd:
-    desc: Placeholder for 07-bootstrapping-etcd tasks
+  copy-etcd-files-to-server:
+    desc: Copy `etcd` binaries and systemd unit files to the `server` machine
     cmds:
-      - echo "Taskfile for 07-bootstrapping-etcd"
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: copy-etcd-files-to-server
+
+  bootstrap-etcd-cluster:
+    desc: Copy `etcd` binaries and systemd unit files to the `server` machine
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: server
+          CMD: bootstrap-etcd-cluster
+  
+  verify-etcd:
+    desk: List the etcd cluster members
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: server
+          CMD: etcdctl member list

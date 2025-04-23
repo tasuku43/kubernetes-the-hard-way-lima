@@ -9,7 +9,6 @@ tasks:
     cmds:
       - task: utils:cmd
         vars:
-          ROOT_DIR: '{{.ROOT_DIR}}'
           NAME: jumpbox
           CMD: configure-cluster-access
   
@@ -18,6 +17,5 @@ tasks:
     cmds:
       - task: utils:cmd
         vars:
-          ROOT_DIR: '{{.ROOT_DIR}}'
           NAME: jumpbox
           CMD: distribute-config-files

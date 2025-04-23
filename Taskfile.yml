@@ -10,6 +10,7 @@ includes:
   04: ./tasks/04-certificate-authority
   05: ./tasks/05-kubernetes-configuration-files
   06: ./tasks/06-data-encryption-keys
+  07: ./tasks/07-bootstrapping-etcd
 
 tasks:
   99:up-cluster:
@@ -27,6 +28,9 @@ tasks:
       - task: 05:configure-cluster-access-for-jumpbox
       - task: 05:distribute-config-files-from-jumpbox
       - task: 06:generate-data-encryption-config-and-key
+      - task: 07:copy-etcd-files-to-server
+      - task: 07:bootstrap-etcd-cluster
+      - task: 07:verify-etcd
 
   99:clean-cluster:
     desc: Clean up the kubernetes cluster

@@ -9,6 +9,5 @@ tasks:
         #!/bin/bash
 
         limactl shell {{.NAME}} sudo -i bash <<'EOF'
-        cd {{.ROOT_DIR}}/lima/{{.NAME}}
-        ./bin/{{.CMD}}
+        {{.CMD}}
         EOF

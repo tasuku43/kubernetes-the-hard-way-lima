@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -euo pipefail
+
+cd kubernetes-the-hard-way
+
+scp \
+  downloads/controller/etcd \
+  downloads/client/etcdctl \
+  units/etcd.service \
+  root@server:~/
