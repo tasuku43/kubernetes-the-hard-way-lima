@@ -10,5 +10,5 @@ tasks:
 
         limactl shell {{.NAME}} sudo -i bash <<'EOF'
         cd {{.ROOT_DIR}}/lima/{{.NAME}}
-        ./{{.CMD}}
+        ./bin/{{.CMD}}
         EOF

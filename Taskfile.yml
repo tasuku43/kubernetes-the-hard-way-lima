@@ -12,7 +12,7 @@ includes:
   06: ./tasks/06-data-encryption-keys
 
 tasks:
-  up-cluster:
+  99:up-cluster:
     desc: Setup the kubernetes cluster
     cmds:
       - task: 00:create-dotenv
@@ -28,7 +28,7 @@ tasks:
       - task: 05:distribute-config-files-from-jumpbox
       - task: 06:generate-data-encryption-config-and-key
 
-  clean-cluster:
+  99:clean-cluster:
     desc: Clean up the kubernetes cluster
     cmds:
       - task: 01:delete-all
