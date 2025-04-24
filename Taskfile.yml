@@ -21,6 +21,7 @@ tasks:
       - task: 01:create-all
       - task: 02:setup-jumpbox
       - task: 03:configure-hostnames
+      - task: 03:create-machines-txt-and-distribute-to-jumpbox
       - task: 03:verify-connectivities
       - task: 03:configure-ssh-access-from-jumpbox
       - task: 04:create-certificates

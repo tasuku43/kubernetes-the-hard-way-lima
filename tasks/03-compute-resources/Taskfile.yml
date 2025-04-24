@@ -71,7 +71,7 @@ tasks:
       - limactl shell {{.NAME}} -- bash -c "sudo sh -c 'cat /tmp/hosts.txt | grep -v {{.NAME}} >> /etc/hosts'"
       - limactl shell {{.NAME}} -- bash -c "rm /tmp/hosts.txt"
   
-  configure-machines-txt:
+  create-machines-txt-and-distribute-to-jumpbox:
     desc: Configure the machines
     cmds:
       - |
@@ -92,7 +92,11 @@ tasks:
 
         # Display the generated machines.txt
         cat machines.txt
-  
+        
+        # Copy machines.txt to the jumpbox
+        limactl cp machines.txt jumpbox:/tmp/machines.txt
+        limactl shell jumpbox sudo -i -- bash -c "cp /tmp/machines.txt ~/"
+
   configure-ssh-access-from-jumpbox:
     desc: Configure SSH access from the jumpbox to other machines
     cmds:
