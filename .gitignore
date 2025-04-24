@@ -17,3 +17,4 @@ tasks/10-configuring-kubectl/10-configuring-kubectl.md
 tasks/11-pod-network-routes/11-pod-network-routes.md
 tasks/12-smoke-test/12-smoke-test.md
 tasks/13-cleanup/13-cleanup.md
+machines.txt
