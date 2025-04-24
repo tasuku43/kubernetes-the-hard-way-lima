@@ -34,7 +34,8 @@ systemctl enable kube-apiserver \
   kube-controller-manager kube-scheduler
 systemctl start kube-apiserver \
   kube-controller-manager kube-scheduler
-
+# Wait for the API Server to start
+sleep 1
 # Checks
 systemctl is-active kube-apiserver
 systemctl is-active kube-apiserver
