@@ -18,7 +18,6 @@ tasks:
     desc: Setup the kubernetes cluster
     cmds:
       - task: 00:create-dotenv
-      - task: 00:download-docs
       - task: 01:create-all
       - task: 02:setup-jumpbox
       - task: 03:configure-hostnames
