@@ -15,14 +15,14 @@ KUBECONFIG_DIR=${HOME}/.kube
 
 for node in node-0 node-1; do
   echo "Distributing kubeconfig files to ${node}..."
-  ssh -o StrictHostKeyChecking=no root@${node} "mkdir -p /var/lib/kubelet/"
-  ssh -o StrictHostKeyChecking=no root@${node} "mkdir -p /var/lib/kube-proxy/"
-  scp -o StrictHostKeyChecking=no ${KUBECONFIG_DIR}/${node}.kubeconfig root@${node}:/var/lib/kubelet/kubeconfig
-  scp -o StrictHostKeyChecking=no ${KUBECONFIG_DIR}/kube-proxy.kubeconfig root@${node}:/var/lib/kube-proxy/kubeconfig
+  ssh root@${node} "mkdir -p /var/lib/kubelet/"
+  ssh root@${node} "mkdir -p /var/lib/kube-proxy/"
+  scp ${KUBECONFIG_DIR}/${node}.kubeconfig root@${node}:/var/lib/kubelet/kubeconfig
+  scp ${KUBECONFIG_DIR}/kube-proxy.kubeconfig root@${node}:/var/lib/kube-proxy/kubeconfig
 done
 
 echo "Distributing kubeconfig files to server..."
-scp -o StrictHostKeyChecking=no \
+scp \
   ${KUBECONFIG_DIR}/admin.kubeconfig \
   ${KUBECONFIG_DIR}/kube-controller-manager.kubeconfig \
   ${KUBECONFIG_DIR}/kube-scheduler.kubeconfig \
