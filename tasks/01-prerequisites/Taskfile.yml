@@ -7,11 +7,29 @@ tasks:
       - task: create
         vars:
           NAME: '{{.ITEM}}'
+          ROOT_DIR: '{{.ROOT_DIR}}'
         for: [jumpbox, server, node-0, node-1]
   create:
-    desc: Create a Lima instance with a template
+    desc: Create a Lima instance with a templ
     cmds:
-      - limactl start --name={{.NAME}} lima/{{.NAME}}/{{.NAME}}.yaml
+      - limactl start --tty=false --name={{.NAME}} lima/{{.NAME}}/{{.NAME}}.yaml
+      - task: export-bin-path-to-profile
+        vars:
+          NAME: '{{.NAME}}'
+          ROOT_DIR: '{{.ROOT_DIR}}'
+  export-bin-path-to-profile:
+    internal: true
+    desc: Add ~/bin path to shell profile inside Lima VM
+    cmds:
+      - |
+        #!/bin/bash
+
+        limactl shell {{.NAME}} sudo -i bash <<'EOF'
+        BIN_PATH="{{.ROOT_DIR}}/lima/{{.NAME}}/bin"
+        PROFILE_FILE="/root/.bashrc"
+
+        echo "export PATH=\$PATH:$BIN_PATH" >> "$PROFILE_FILE"
+        EOF
 
   validate-all:
     desc: Validate all machine configurations using Lima
@@ -55,4 +73,3 @@ tasks:
     desc: Connect to a VM as root user
     cmds:
       - limactl shell {{.NAME}} sudo -i
-  

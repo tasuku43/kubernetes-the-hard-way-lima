@@ -12,28 +12,6 @@ tasks:
         echo "ROOT_DIR=$(pwd)" > .env
         echo "ROOT_PASS=$(openssl rand -base64 12)" >> .env
   
-  export-bin-path-to-profiles:
-    desc: Add ~/bin path to shell profile inside Lima VMs
-    cmds:
-      - task: export-bin-path-to-profile
-        vars:
-          NAME: '{{.ITEM}}'
-          ROOT_DIR: '{{.ROOT_DIR}}'
-        for: [jumpbox, server, node-0, node-1]
-  export-bin-path-to-profile:
-    internal: true
-    desc: Add ~/bin path to shell profile inside Lima VM
-    cmds:
-      - |
-        #!/bin/bash
-
-        limactl shell {{.NAME}} sudo -i bash <<'EOF'
-        BIN_PATH="{{.ROOT_DIR}}/lima/{{.NAME}}/bin"
-        PROFILE_FILE="/root/.bashrc"
-
-        echo "export PATH=\$PATH:$BIN_PATH" >> "$PROFILE_FILE"
-        EOF
-
   download-docs:
     desc: Download documentation for Kubernetes the Hard Way
     cmds:
