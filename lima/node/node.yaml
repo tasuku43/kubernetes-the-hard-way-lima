@@ -1,5 +1,5 @@
-# node-0.yaml
-# Lima configuration for the Kubernetes worker node-0
+# node.yaml
+# Lima configuration for the Kubernetes worker node
 
 images:
 - location: "https://cloud.debian.org/images/cloud/bookworm/20250316-2053/debian-12-genericcloud-amd64-20250316-2053.qcow2"

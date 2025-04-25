@@ -12,7 +12,13 @@ tasks:
   create:
     desc: Create a Lima instance with a templ
     cmds:
-      - limactl start --tty=false --name={{.NAME}} lima/{{.NAME}}/{{.NAME}}.yaml
+      - |
+        VM_NAME={{.NAME}}
+        if [[ $VM_NAME == node-* ]]; then
+          limactl start --tty=false --name={{.NAME}} lima/node/node.yaml
+        else
+          limactl start --tty=false --name={{.NAME}} lima/{{.NAME}}/{{.NAME}}.yaml
+        fi
       - task: export-bin-path-to-profile
         vars:
           NAME: '{{.NAME}}'
@@ -22,10 +28,17 @@ tasks:
     desc: Add ~/bin path to shell profile inside Lima VM
     cmds:
       - |
+        limactl shell {{.NAME}} sudo -i bash <<'EOF'
         #!/bin/bash
 
-        limactl shell {{.NAME}} sudo -i bash <<'EOF'
-        BIN_PATH="{{.ROOT_DIR}}/lima/{{.NAME}}/bin"
+        VM_NAME={{.NAME}}
+
+        if [[ $VM_NAME == node-* ]]; then
+          BIN_PATH="{{.ROOT_DIR}}/lima/node/bin"
+        else
+          BIN_PATH="{{.ROOT_DIR}}/lima/{{.NAME}}/bin"
+        fi
+
         PROFILE_FILE="/root/.bashrc"
 
         echo "export PATH=\$PATH:$BIN_PATH" >> "$PROFILE_FILE"
