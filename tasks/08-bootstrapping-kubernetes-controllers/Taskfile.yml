@@ -26,12 +26,4 @@ tasks:
       - task: utils:cmd
         vars:
           NAME: jumpbox
-          CMD: |
-            set -euo pipefail
-            
-            cd kubernetes-the-hard-way
-            curl --cacert ca.crt \
-              https://server.kubernetes.local:6443/version
-
-
-  
+          CMD: verify-control-plane
