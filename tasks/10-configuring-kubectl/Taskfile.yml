@@ -1,7 +1,36 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
-  utils:cmd:
-    desc: Placeholder for 10-configuring-kubectl tasks
+  admin-kubeconfig:
+    desc: Generate the Admin Kubernetes Configuration File
     cmds:
-      - echo "Taskfile for 10-configuring-kubectl"
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: configure-admin
+
+  verify-kubectl:
+    desc: Verify kubectl configuration and connectivity to the Kubernetes cluster
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: |
+            #!/bin/bash
+
+            echo "Checking kubectl version..."
+            kubectl version || {
+              echo "Error: kubectl is not configured correctly." >&2
+              exit 1
+            }
+
+            echo "Listing Kubernetes nodes..."
+            kubectl get nodes || {
+              echo "Error: Unable to connect to the Kubernetes cluster." >&2
+              exit 1
+            }
+
+            echo "kubectl is configured and connected to the cluster successfully."
