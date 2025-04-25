@@ -14,6 +14,7 @@ includes:
   08: ./tasks/08-bootstrapping-kubernetes-controllers
   09: ./tasks/09-bootstrapping-kubernetes-workers
   10: ./tasks/10-configuring-kubectl
+  11: ./tasks/11-pod-network-routes
 
 tasks:
   99:up-cluster:
@@ -42,6 +43,8 @@ tasks:
       - task: 09:verify-k8s-nodes
       - task: 10:admin-kubeconfig
       - task: 10:verify-kubectl
+      - task: 11:setup-pod-network-routes
+      - task: 11:verify-pod-network-routes
 
   99:clean-cluster:
     desc: Clean up the kubernetes cluster

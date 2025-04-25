@@ -21,7 +21,7 @@ tasks:
           CMD: bootstrap-etcd-cluster
   
   verify-etcd:
-    desk: List the etcd cluster members
+    desc: List the etcd cluster members
     cmds:
       - task: utils:cmd
         vars:
