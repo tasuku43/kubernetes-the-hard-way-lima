@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Delete the secret if it already exists
+kubectl delete secret kubernetes-the-hard-way --ignore-not-found
+
+kubectl create secret generic kubernetes-the-hard-way \
+  --from-literal="mykey=mydata"
+
+# Test if the secret is encrypted in etcd
+ETCD_HEXDUMP=$(ssh root@server 'etcdctl get /registry/secrets/default/kubernetes-the-hard-way | hexdump -C')
+
+if echo "$ETCD_HEXDUMP" | awk -F'|' '{print $2}' | sed ':a;N;$!ba;s/\n//g' | grep -q '/registry/secrets/default/kubernetes-the-hard-way.k8s:enc:aescbc:v1:key1'; then
+  echo "Data encryption test passed: Secret is encrypted in etcd and contains '/registry/secrets/default/kubernetes-the-hard-way.k8s:enc:aescbc:v1:key1'."
+  echo "$ETCD_HEXDUMP"
+else
+  echo "Data encryption test failed: Secret is not properly encrypted in etcd." >&2
+  exit 1
+fi

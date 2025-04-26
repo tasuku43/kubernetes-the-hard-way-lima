@@ -15,6 +15,7 @@ includes:
   09: ./tasks/09-bootstrapping-kubernetes-workers
   10: ./tasks/10-configuring-kubectl
   11: ./tasks/11-pod-network-routes
+  12: ./tasks/12-smoke-test
 
 tasks:
   99:up-cluster:

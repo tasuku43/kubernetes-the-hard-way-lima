@@ -1,7 +1,19 @@
 version: '3'
 
+includes:
+  utils: ../Taskfile.yml
+
 tasks:
-  utils:cmd:
-    desc: Placeholder for 12-smoke-test tasks
+  smoke-test:
+    desc: Perform the smoke test to verify Kubernetes cluster functionality
     cmds:
-      - echo "Taskfile for 12-smoke-test"
+      - task: test-data-encryption
+
+  test-data-encryption:
+    internal: true
+    desc: Perform the smoke test to verify Kubernetes cluster functionality
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: test-data-encryption
