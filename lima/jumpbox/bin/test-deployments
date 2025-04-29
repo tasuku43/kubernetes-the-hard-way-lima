@@ -4,31 +4,56 @@ set -euo pipefail
 
 cd kubernetes-the-hard-way
 
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}[TEST] Creating nginx deployment${NC}"
 kubectl create deployment nginx --image=nginx:latest
 
 while true; do
   POD_STATUS=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].status.phase}")
   if [ "$POD_STATUS" == "Running" ]; then
+    echo -e "${GREEN}Pod is in Running state${NC}"
     kubectl get pods -l app=nginx
     break
   fi
-  echo "Waiting for pod to be in Running state..."
+  echo -e "${YELLOW}Waiting for pod to be in Running state...${NC}"
   sleep 2
 done
 
-#
-# Port Forwarding
-#
 POD_NAME=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].metadata.name}")
 
-# In the official guide, port-forward is run in a separate terminal. 
-# Here we run it in the background because we are operating in a single session.
+echo -e "${BLUE}[TEST] Port Forwarding${NC}"
 kubectl port-forward $POD_NAME 8080:80 & PORT_FORWARD_PID=$!
 
 sleep 5
 
+echo -e "${BLUE}[TEST] Testing port-forward with curl${NC}"
 curl --head http://127.0.0.1:8080
 
 kill $PORT_FORWARD_PID
 
+echo -e "${BLUE}[TEST] Fetching logs from the pod${NC}"
+kubectl logs $POD_NAME
+
+echo -e "${BLUE}[TEST] Executing command in the pod${NC}"
+kubectl exec -ti $POD_NAME -- nginx -v
+
+echo -e "${BLUE}[TEST] Exposing deployment as a service${NC}"
+kubectl expose deployment nginx \
+  --port 80 --type NodePort
+
+NODE_PORT=$(kubectl get svc nginx --output=jsonpath='{range .spec.ports[0]}{.nodePort}')
+NODE_NAME=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].spec.nodeName}")
+
+echo -e "${BLUE}[TEST] Testing service accessibility${NC}"
+curl -I http://${NODE_NAME}:${NODE_PORT}
+
+echo -e "${GREEN}Cleaning up deployment${NC}"
 kubectl delete deployment nginx
+echo -e "${GREEN}Cleaning up service${NC}"
+kubectl delete service nginx
