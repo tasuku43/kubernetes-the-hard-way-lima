@@ -16,6 +16,7 @@ includes:
   10: ./tasks/10-configuring-kubectl
   11: ./tasks/11-pod-network-routes
   12: ./tasks/12-smoke-test
+  13: ./tasks/13-cleanup
 
 tasks:
   99:up-cluster:
@@ -46,8 +47,13 @@ tasks:
       - task: 10:verify-kubectl
       - task: 11:setup-pod-network-routes
       - task: 11:verify-pod-network-routes
+  
+  99:smoke-test:
+    desc: Perform the smoke test to verify Kubernetes cluster functionality
+    cmds:
+      - task: 12:smoke-test
 
   99:clean-cluster:
     desc: Clean up the kubernetes cluster
     cmds:
-      - task: 01:delete-all
+      - task: 13:cleanup

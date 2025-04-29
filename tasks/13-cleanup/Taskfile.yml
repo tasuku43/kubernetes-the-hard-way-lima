@@ -1,7 +1,11 @@
 version: '3'
 
+includes:
+  utils: ../01-prerequisites/Taskfile.yml
+
 tasks:
-  utils:cmd:
-    desc: Placeholder for 13-cleanup tasks
+  cleanup:
+    internal: true
+    desc: Clean up the kubernetes cluster
     cmds:
-      - echo "Taskfile for 13-cleanup"
+      - task: utils:delete-all
