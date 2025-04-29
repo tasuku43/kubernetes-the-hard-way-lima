@@ -27,3 +27,13 @@ tasks:
         vars:
           NAME: jumpbox
           CMD: verify-control-plane
+  
+  rbac-kubelet-authorization:
+    desc: "Configure RBAC for Kubelet Authorization"
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: server
+          CMD: |
+            kubectl apply -f kube-apiserver-to-kubelet.yaml \
+              --kubeconfig admin.kubeconfig

@@ -53,7 +53,7 @@ systemctl enable containerd kubelet kube-proxy
 systemctl start containerd kubelet kube-proxy
 
 # Wait for kubelet to be ready
-sleep 1
+sleep 3
 
 # Check kubelet status
-systemctl status kubelet
+SYSTEMD_PAGER=cat systemctl status kubelet
