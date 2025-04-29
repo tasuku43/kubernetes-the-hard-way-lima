@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -euo pipefail
+
+cd kubernetes-the-hard-way
+
+kubectl create deployment nginx --image=nginx:latest
+
+while true; do
+  POD_STATUS=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].status.phase}")
+  if [ "$POD_STATUS" == "Running" ]; then
+    kubectl get pods -l app=nginx
+    break
+  fi
+  echo "Waiting for pod to be in Running state..."
+  sleep 2
+done
+
+#
+# Port Forwarding
+#
+POD_NAME=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].metadata.name}")
+
+# In the official guide, port-forward is run in a separate terminal. 
+# Here we run it in the background because we are operating in a single session.
+kubectl port-forward $POD_NAME 8080:80 & PORT_FORWARD_PID=$!
+
+sleep 5
+
+curl --head http://127.0.0.1:8080
+
+kill $PORT_FORWARD_PID
+
+kubectl delete deployment nginx

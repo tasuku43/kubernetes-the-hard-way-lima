@@ -8,6 +8,7 @@ tasks:
     desc: Perform the smoke test to verify Kubernetes cluster functionality
     cmds:
       - task: test-data-encryption
+      - task: test-deployments
 
   test-data-encryption:
     internal: true
@@ -17,3 +18,12 @@ tasks:
         vars:
           NAME: jumpbox
           CMD: test-data-encryption
+
+  test-deployments:
+    internal: true
+    desc: Perform the smoke test to verify Kubernetes cluster functionality
+    cmds:
+      - task: utils:cmd
+        vars:
+          NAME: jumpbox
+          CMD: test-deployments
