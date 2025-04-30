@@ -1,5 +1,6 @@
 /lima/jumpbox/kubernetes-the-hard-way/
 /socket_vmnet/
+/.vscode/
 .env
 hosts.txt
 
