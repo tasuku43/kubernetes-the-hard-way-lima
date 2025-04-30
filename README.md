@@ -67,7 +67,7 @@ The project is organized as follows:
 To set up and start the Kubernetes cluster, run the following task:
 
 ```bash
-task up-cluster
+task setup-cluster
 ```
 This command will execute all necessary steps to initialize the cluster, including setting up the jumpbox, configuring nodes, and provisioning the control plane and worker nodes.
 
