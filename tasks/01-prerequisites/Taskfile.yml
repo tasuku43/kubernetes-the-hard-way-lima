@@ -82,7 +82,3 @@ tasks:
       - task: delete-all
       - task: create-all
   
-  connect:
-    desc: Connect to a VM as root user
-    cmds:
-      - limactl shell {{.NAME}} sudo -i

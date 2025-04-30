@@ -57,3 +57,44 @@ tasks:
     desc: Clean up the Kubernetes cluster
     cmds:
       - task: 13:cleanup
+
+  ssh-vm:
+    desc: Prompt user to select a VM and SSH into it as root
+    silent: true
+    cmds:
+      - |
+        #!/bin/bash
+
+        if command -v fzf > /dev/null; then
+          # Use fzf for VM selection if available
+          vm=$(printf "node-1\nnode-0\nserver\njumpbox" | fzf --prompt="Select a VM to connect: ")
+          if [ -n "$vm" ]; then
+            limactl shell "$vm" sudo -i
+          else
+            echo "No VM selected. Exiting."
+          fi
+        elif command -v gum > /dev/null; then
+          # Use gum for VM selection if available
+          vm=$(echo -e "jumpbox\nserver\nnode-0\nnode-1" | gum choose)
+          if [ -n "$vm" ]; then
+            limactl shell "$vm" sudo -i
+          else
+            echo "No VM selected. Exiting."
+          fi
+        else
+          # Fallback to PS3 menu if neither fzf nor gum is available
+          PS3="Select a VM to connect: "
+          options=("jumpbox" "server" "node-0" "node-1")
+
+          while true; do
+            select opt in "${options[@]}"; do
+              if [ -n "$opt" ]; then
+                limactl shell "$opt" sudo -i
+                exit 0
+              else
+                echo "Invalid selection. Please enter a valid number."
+                break
+              fi
+            done
+          done
+        fi
