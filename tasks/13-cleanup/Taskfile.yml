@@ -1,11 +1,10 @@
 version: '3'
 
-includes:
-  utils: ../01-prerequisites/Taskfile.yml
-
 tasks:
   cleanup:
-    internal: true
     desc: Clean up the kubernetes cluster
     cmds:
-      - task: utils:delete-all
+      - cmd: |
+          limactl stop {{.ITEM}} || true
+          limactl delete {{.ITEM}} || true
+        for: [jumpbox, server, node-0, node-1]
