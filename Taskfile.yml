@@ -19,8 +19,8 @@ includes:
   13: ./tasks/13-cleanup
 
 tasks:
-  99:up-cluster:
-    desc: Setup the kubernetes cluster
+  setup-cluster:
+    desc: Setup the Kubernetes cluster
     cmds:
       - task: 00:create-dotenv
       - task: 01:create-all
@@ -47,13 +47,13 @@ tasks:
       - task: 10:verify-kubectl
       - task: 11:setup-pod-network-routes
       - task: 11:verify-pod-network-routes
-  
-  99:smoke-test:
+
+  smoke-test:
     desc: Perform the smoke test to verify Kubernetes cluster functionality
     cmds:
       - task: 12:smoke-test
 
-  99:clean-cluster:
-    desc: Clean up the kubernetes cluster
+  clean-cluster:
+    desc: Clean up the Kubernetes cluster
     cmds:
       - task: 13:cleanup
