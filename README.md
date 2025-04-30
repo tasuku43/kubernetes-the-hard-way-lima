@@ -1,7 +1,10 @@
 # Kubernetes the Hard Way with Lima
 
 ## Overview
+
 This project is a step-by-step implementation of [Kubernetes the Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) using [Lima](https://github.com/lima-vm/lima), a lightweight virtual machine manager for macOS. It automates the process of setting up a Kubernetes cluster from scratch, providing a learning experience for understanding the inner workings of Kubernetes.
+
+By using Lima, all virtual machines required for the Kubernetes cluster can run locally on a single macOS machine, eliminating the need to provision cloud infrastructure or dedicated hardware. This significantly lowers the barrier to entry and reduces cost, allowing anyone with a Mac to practice Kubernetes the Hard Way in a fully self-contained, reproducible environment.
 
 ## Prerequisites
 
