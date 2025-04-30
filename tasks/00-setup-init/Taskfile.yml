@@ -12,6 +12,41 @@ tasks:
         echo "ROOT_DIR=$(pwd)" > .env
         echo "ROOT_PASS=$(openssl rand -base64 12)" >> .env
   
+  install-socket-vmnet:
+    desc: |
+      Install socket_vmnet for macOS.This is required for the Lima VM to communicate with the host machine
+    cmds:
+      - |
+        #!/bin/bash
+
+        # =============================================
+        # Install socket_vmnet for Lima bridged networking
+        # More info: https://lima-vm.io/docs/config/network/vmnet/#socket_vmnet
+        #
+        # socket_vmnet allows Lima VMs to use a bridged-style network,
+        # enabling static IPs and direct communication between VMs or from host to guest.
+        # For security reasons, it must be installed in a root-owned directory
+        # (e.g., /opt/socket_vmnet) and not via Homebrew.
+        # =============================================
+
+        echo "Installing socket_vmnet..."
+
+        # Clone the official socket_vmnet repository
+        git clone https://github.com/lima-vm/socket_vmnet
+        cd socket_vmnet
+
+        # Check out the latest stable release (update as needed)
+        git checkout v1.2.0
+
+        # Build the socket_vmnet binary
+        make
+
+        # Install the binary to a secure, root-only directory
+        sudo make PREFIX=/opt/socket_vmnet install.bin
+
+        # Configure sudo permissions to allow Lima to use socket_vmnet without a password
+        limactl sudoers | sudo tee /etc/sudoers.d/lima
+  
   download-docs:
     desc: Download documentation for Kubernetes the Hard Way
     cmds:
