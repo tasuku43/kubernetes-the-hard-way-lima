@@ -87,6 +87,16 @@ task clean-cluster
 ```
 This will delete all resources and reset the environment to its initial state.
 
+
+### Step-by-Step Execution
+
+If you prefer to manually execute each step of the process, you can do so by running individual tasks. To see the list of available tasks, use the following command:
+
+```bash
+task --list
+```
+This will display all the tasks defined in the project, allowing you to execute them step-by-step for a more granular understanding of the setup process.
+
 ### Accessing Virtual Machines
 
 To access the virtual machines created by Lima, you can use the following task:
