@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+cd $HOME; pwd
+
 # Install the Kubernetes Controller Binaries
 mkdir -p /etc/kubernetes/config
 mv kube-apiserver \

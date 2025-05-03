@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+cd $HOME; pwd
+
 # Delete the secret if it already exists
 kubectl delete secret kubernetes-the-hard-way --ignore-not-found
 

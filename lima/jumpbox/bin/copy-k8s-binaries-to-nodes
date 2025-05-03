@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+cd $HOME; pwd
+
 for HOST in node-0 node-1; do
   SUBNET=$(grep -P "${HOST}\s" machines.txt | awk '{print $4}')
   sed "s|SUBNET|$SUBNET|g" \

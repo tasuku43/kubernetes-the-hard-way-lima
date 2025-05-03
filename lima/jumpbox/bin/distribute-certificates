@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+cd $HOME; pwd
 cd kubernetes-the-hard-way
 
 for host in node-0 node-1; do

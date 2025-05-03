@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+cd $HOME; pwd
+
 # Install the etcd Binaries
 mv etcd etcdctl /usr/local/bin/
 

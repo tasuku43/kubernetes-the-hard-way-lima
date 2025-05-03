@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+cd $HOME; pwd
 cd kubernetes-the-hard-way
 curl --cacert ca.crt \
   https://server.kubernetes.local:6443/version
