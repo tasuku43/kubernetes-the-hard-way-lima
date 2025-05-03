@@ -10,4 +10,4 @@ tasks:
       - task: utils:cmd
         vars:
           NAME: jumpbox
-          CMD: setup-jumpbox
+          CMD: 02-setup-jumpbox
